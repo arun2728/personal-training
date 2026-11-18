@@ -9,6 +9,15 @@ export interface CoachFeedback {
   comment: string;
   status?: FeedbackStatus;
   updatedAt?: string;
+  date?: string;
+}
+
+export interface HistoricalFeedback {
+  date: string; // e.g. "2026-11-11"
+  comment: string;
+  status?: FeedbackStatus;
+  lastWeightKg?: number;
+  lastReps?: number;
 }
 
 export interface ExerciseTemplate {
@@ -45,7 +54,7 @@ export interface ExerciseLog {
   exerciseId: string;
   exerciseName: string;
   sets: SetLog[];
-  coachFeedback?: CoachFeedback; // Overall feedback from Aanchal covering all sets
+  coachFeedback?: CoachFeedback; // Current session feedback from Aanchal
 }
 
 export interface WorkoutSession {

@@ -1,20 +1,37 @@
 "use client";
 
 import { useState } from "react";
-import { ExerciseTemplate, ExerciseLog, SetLog, CoachFeedback } from "@/types/workout";
+import {
+  ExerciseTemplate,
+  ExerciseLog,
+  SetLog,
+  CoachFeedback,
+  HistoricalFeedback,
+} from "@/types/workout";
 import { SetRow } from "./SetRow";
 import { CoachFeedbackSection } from "./CoachFeedbackSection";
-import { ChevronDown, ChevronUp, Plus, Info, CheckCircle2, MessageSquare } from "lucide-react";
+import { PreviousFeedbackBanner } from "./PreviousFeedbackBanner";
+import {
+  ChevronDown,
+  ChevronUp,
+  Plus,
+  Info,
+  CheckCircle2,
+  MessageSquare,
+  Sparkles,
+} from "lucide-react";
 
 interface ExerciseCardProps {
   template: ExerciseTemplate;
   exerciseLog: ExerciseLog;
+  previousFeedback?: HistoricalFeedback | null;
   onUpdateExerciseLog: (updated: ExerciseLog) => void;
 }
 
 export function ExerciseCard({
   template,
   exerciseLog,
+  previousFeedback,
   onUpdateExerciseLog,
 }: ExerciseCardProps) {
   const [isExpanded, setIsExpanded] = useState(true);
@@ -82,7 +99,14 @@ export function ExerciseCard({
             {exerciseLog.coachFeedback?.comment && (
               <span className="inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#0d1710] text-emerald-400 border border-[#1b3823]">
                 <MessageSquare className="h-2.5 w-2.5" />
-                Coach Review
+                Coach Review Added
+              </span>
+            )}
+
+            {previousFeedback && !exerciseLog.coachFeedback?.comment && (
+              <span className="inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#0d141f] text-sky-400 border border-[#1b2b3d]">
+                <Sparkles className="h-2.5 w-2.5" />
+                Past Cue Available
               </span>
             )}
           </div>
@@ -129,15 +153,23 @@ export function ExerciseCard({
         </div>
       </div>
 
-      {/* Expanded Content: Form Cues, Set Rows, Coach Feedback */}
+      {/* Expanded Content: Previous Week Feedback, Form Cues, Set Rows, Today's Feedback */}
       {isExpanded && (
         <div className="px-4 pb-4 pt-1 space-y-3 border-t border-[#1a1a1a]">
+          {/* 🌟 Previous Week's Feedback Callout */}
+          {previousFeedback && (
+            <PreviousFeedbackBanner
+              previousFeedback={previousFeedback}
+              exerciseName={template.name}
+            />
+          )}
+
           {/* Coach Form Cues */}
           {template.notes && (
             <div className="p-3 rounded-xl bg-[#0f0f0f] border border-[#222222] text-xs text-[#a1a1aa] flex items-start gap-2">
               <Info className="h-3.5 w-3.5 shrink-0 text-white mt-0.5" />
               <span>
-                <strong className="text-white font-medium">Aanchal&apos;s Cue: </strong>
+                <strong className="text-white font-medium">Aanchal&apos;s Form Cue: </strong>
                 {template.notes}
               </span>
             </div>
@@ -166,7 +198,7 @@ export function ExerciseCard({
             <span>Add Extra Set</span>
           </button>
 
-          {/* Coach Aanchal's Exercise Feedback Section */}
+          {/* Today's Feedback Section for Aanchal */}
           <CoachFeedbackSection
             exerciseName={template.name}
             feedback={exerciseLog.coachFeedback}

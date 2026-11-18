@@ -7,6 +7,10 @@ import {
   WorkoutSession,
   ExerciseLog,
 } from "@/types/workout";
+import {
+  getPreviousFeedbackForExercise,
+  recordExerciseFeedback,
+} from "@/lib/workoutHistory";
 import { Navbar } from "@/components/Navbar";
 import { WorkoutDaySelector } from "@/components/WorkoutDaySelector";
 import { ExerciseCard } from "@/components/ExerciseCard";
@@ -106,6 +110,17 @@ export default function WorkoutDashboard() {
     if (!activeSession) return;
     const updatedExercises = [...activeSession.exercises];
     updatedExercises[exerciseIndex] = updatedLog;
+
+    // Automatically record to historical store if feedback is added/edited
+    if (updatedLog.coachFeedback) {
+      recordExerciseFeedback(
+        updatedLog.exerciseId,
+        workoutDate,
+        updatedLog.coachFeedback,
+        updatedLog.sets
+      );
+    }
+
     setActiveSession({
       ...activeSession,
       exercises: updatedExercises,
@@ -224,7 +239,7 @@ export default function WorkoutDashboard() {
           </div>
         </div>
 
-        {/* Exercise Cards */}
+        {/* Exercise Cards with Previous Week's Feedback */}
         <div className="space-y-3">
           {currentDayTemplate.exercises.map((template, index) => {
             const exerciseLog =
@@ -234,11 +249,17 @@ export default function WorkoutDashboard() {
                 sets: [],
               };
 
+            const previousFeedback = getPreviousFeedbackForExercise(
+              template.id,
+              workoutDate
+            );
+
             return (
               <ExerciseCard
                 key={template.id}
                 template={template}
                 exerciseLog={exerciseLog}
+                previousFeedback={previousFeedback}
                 onUpdateExerciseLog={(updated) =>
                   handleUpdateExerciseLog(index, updated)
                 }
