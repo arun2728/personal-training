@@ -16,7 +16,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
-  themeColor: "#0f172a",
+  themeColor: "#000000",
 };
 
 export default function RootLayout({
@@ -25,8 +25,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="h-full bg-slate-950 text-slate-100 antialiased dark">
-      <body className="min-h-full flex flex-col font-sans select-none pb-safe">
+    <html lang="en" className="h-full bg-black text-[#ededed] antialiased dark">
+      <body className="min-h-full flex flex-col font-sans select-none pb-safe bg-black">
         {children}
       </body>
     </html>

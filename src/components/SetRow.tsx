@@ -29,7 +29,6 @@ export function SetRow({ setLog, setIndex, onUpdate, onDelete }: SetRowProps) {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Create temporary local object URL for instant preview in session
     const objectUrl = URL.createObjectURL(file);
     onUpdate({
       ...setLog,
@@ -53,46 +52,46 @@ export function SetRow({ setLog, setIndex, onUpdate, onDelete }: SetRowProps) {
   return (
     <>
       <div
-        className={`p-3.5 rounded-2xl border transition-all ${
+        className={`p-3 rounded-xl border transition-all ${
           setLog.completed
-            ? "bg-emerald-950/20 border-emerald-500/30 shadow-sm"
-            : "bg-slate-900/60 border-slate-800 hover:border-slate-700"
+            ? "bg-[#0b140e] border-[#1d3823]"
+            : "bg-[#0a0a0a] border-[#1f1f1f] hover:border-[#2a2a2a]"
         }`}
       >
         <div className="flex items-center justify-between gap-2">
-          {/* Set Number Label & Status */}
+          {/* Set Number Label */}
           <div className="flex items-center gap-2">
             <span
-              className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold font-mono ${
+              className={`w-6 h-6 rounded-md flex items-center justify-center text-[11px] font-mono font-bold ${
                 setLog.completed
-                  ? "bg-emerald-500 text-slate-950 font-bold"
-                  : "bg-slate-800 text-slate-400"
+                  ? "bg-emerald-500 text-black"
+                  : "bg-[#161616] border border-[#2a2a2a] text-[#888888]"
               }`}
             >
               {setIndex + 1}
             </span>
-            <span className="text-xs font-medium uppercase tracking-wider text-slate-400">
+            <span className="text-[11px] font-mono uppercase tracking-wider text-[#888888]">
               Set {setIndex + 1}
             </span>
           </div>
 
-          {/* Quick Actions (Delete Set) */}
+          {/* Delete Set */}
           <button
             onClick={onDelete}
-            className="text-slate-500 hover:text-rose-400 p-1 rounded transition-colors cursor-pointer"
+            className="text-[#555555] hover:text-[#ff6666] p-1 rounded transition-colors cursor-pointer"
             title="Delete set"
           >
             <Trash2 className="h-3.5 w-3.5" />
           </button>
         </div>
 
-        {/* Weight & Reps Stepper Grid */}
-        <div className="grid grid-cols-2 gap-3 mt-3">
-          {/* Weight Stepper */}
-          <div className="bg-slate-950/60 rounded-xl p-2.5 border border-slate-800/80">
-            <div className="text-[10px] font-semibold uppercase tracking-wider text-slate-400 mb-1 flex justify-between">
+        {/* Stepper Grid */}
+        <div className="grid grid-cols-2 gap-2.5 mt-2.5">
+          {/* Weight */}
+          <div className="bg-black rounded-lg p-2 border border-[#222222]">
+            <div className="text-[10px] font-mono uppercase tracking-wider text-[#666666] mb-1 flex justify-between">
               <span>Weight (kg)</span>
-              <span className="text-indigo-400 font-mono font-bold">
+              <span className="text-white font-mono font-bold">
                 {setLog.weightKg} kg
               </span>
             </div>
@@ -100,7 +99,7 @@ export function SetRow({ setLog, setIndex, onUpdate, onDelete }: SetRowProps) {
               <button
                 type="button"
                 onClick={() => handleWeightChange(-2.5)}
-                className="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 flex items-center justify-center font-bold text-xs active:scale-95 cursor-pointer"
+                className="w-7 h-7 rounded-md bg-[#141414] hover:bg-[#202020] text-[#ededed] border border-[#262626] flex items-center justify-center font-mono text-[10px] active:scale-95 cursor-pointer"
                 title="-2.5 kg"
               >
                 -2.5
@@ -117,12 +116,12 @@ export function SetRow({ setLog, setIndex, onUpdate, onDelete }: SetRowProps) {
                   })
                 }
                 placeholder="0"
-                className="w-16 text-center bg-transparent text-white font-mono font-bold text-base focus:outline-none"
+                className="w-16 text-center bg-transparent text-white font-mono font-bold text-sm focus:outline-none"
               />
               <button
                 type="button"
                 onClick={() => handleWeightChange(2.5)}
-                className="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 flex items-center justify-center font-bold text-xs active:scale-95 cursor-pointer"
+                className="w-7 h-7 rounded-md bg-[#141414] hover:bg-[#202020] text-[#ededed] border border-[#262626] flex items-center justify-center font-mono text-[10px] active:scale-95 cursor-pointer"
                 title="+2.5 kg"
               >
                 +2.5
@@ -130,19 +129,19 @@ export function SetRow({ setLog, setIndex, onUpdate, onDelete }: SetRowProps) {
             </div>
           </div>
 
-          {/* Reps Stepper */}
-          <div className="bg-slate-950/60 rounded-xl p-2.5 border border-slate-800/80">
-            <div className="text-[10px] font-semibold uppercase tracking-wider text-slate-400 mb-1 flex justify-between">
+          {/* Reps */}
+          <div className="bg-black rounded-lg p-2 border border-[#222222]">
+            <div className="text-[10px] font-mono uppercase tracking-wider text-[#666666] mb-1 flex justify-between">
               <span>Reps</span>
-              <span className="text-amber-400 font-mono font-bold">
-                {setLog.reps} reps
+              <span className="text-white font-mono font-bold">
+                {setLog.reps}
               </span>
             </div>
             <div className="flex items-center justify-between gap-1">
               <button
                 type="button"
                 onClick={() => handleRepsChange(-1)}
-                className="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 flex items-center justify-center font-bold text-xs active:scale-95 cursor-pointer"
+                className="w-7 h-7 rounded-md bg-[#141414] hover:bg-[#202020] text-[#ededed] border border-[#262626] flex items-center justify-center active:scale-95 cursor-pointer"
                 title="-1 rep"
               >
                 <Minus className="h-3 w-3" />
@@ -158,12 +157,12 @@ export function SetRow({ setLog, setIndex, onUpdate, onDelete }: SetRowProps) {
                   })
                 }
                 placeholder="0"
-                className="w-16 text-center bg-transparent text-white font-mono font-bold text-base focus:outline-none"
+                className="w-16 text-center bg-transparent text-white font-mono font-bold text-sm focus:outline-none"
               />
               <button
                 type="button"
                 onClick={() => handleRepsChange(1)}
-                className="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 flex items-center justify-center font-bold text-xs active:scale-95 cursor-pointer"
+                className="w-7 h-7 rounded-md bg-[#141414] hover:bg-[#202020] text-[#ededed] border border-[#262626] flex items-center justify-center active:scale-95 cursor-pointer"
                 title="+1 rep"
               >
                 <Plus className="h-3 w-3" />
@@ -173,8 +172,7 @@ export function SetRow({ setLog, setIndex, onUpdate, onDelete }: SetRowProps) {
         </div>
 
         {/* Video Attachment & Completion Bar */}
-        <div className="flex items-center justify-between gap-2 mt-3 pt-2.5 border-t border-slate-800/80">
-          {/* Video Attachment Button / Indicator */}
+        <div className="flex items-center justify-between gap-2 mt-2.5 pt-2 border-t border-[#1a1a1a]">
           <div>
             <input
               type="file"
@@ -185,21 +183,21 @@ export function SetRow({ setLog, setIndex, onUpdate, onDelete }: SetRowProps) {
             />
 
             {setLog.videoUrl ? (
-              <div className="flex items-center gap-1.5 bg-indigo-950/40 border border-indigo-500/30 rounded-xl px-2.5 py-1 text-xs text-indigo-300">
+              <div className="flex items-center gap-1.5 bg-[#141414] border border-[#333333] rounded-lg px-2.5 py-1 text-xs text-[#ededed]">
                 <button
                   type="button"
                   onClick={() => setShowVideoModal(true)}
                   className="flex items-center gap-1.5 font-medium hover:text-white cursor-pointer"
                 >
-                  <Play className="h-3.5 w-3.5 text-indigo-400 fill-indigo-400" />
-                  <span className="truncate max-w-[120px]">
+                  <Play className="h-3 w-3 text-white fill-white" />
+                  <span className="truncate max-w-[120px] font-mono text-[11px]">
                     {setLog.videoFileName || "View Video"}
                   </span>
                 </button>
                 <button
                   type="button"
                   onClick={removeVideo}
-                  className="p-1 hover:text-rose-400 rounded cursor-pointer"
+                  className="p-0.5 hover:text-[#ff6666] text-[#888888] rounded cursor-pointer"
                   title="Remove video"
                 >
                   <X className="h-3 w-3" />
@@ -209,10 +207,10 @@ export function SetRow({ setLog, setIndex, onUpdate, onDelete }: SetRowProps) {
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-800 text-slate-300 text-xs font-medium border border-slate-700/60 transition-colors cursor-pointer"
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-black hover:bg-[#141414] text-[#888888] hover:text-white text-xs font-medium border border-[#262626] transition-colors cursor-pointer"
               >
-                <Video className="h-3.5 w-3.5 text-indigo-400" />
-                <span>Attach Video</span>
+                <Video className="h-3 w-3 text-white" />
+                <span>Video</span>
               </button>
             )}
           </div>
@@ -221,38 +219,34 @@ export function SetRow({ setLog, setIndex, onUpdate, onDelete }: SetRowProps) {
           <button
             type="button"
             onClick={() => onUpdate({ ...setLog, completed: !setLog.completed })}
-            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold cursor-pointer transition-all ${
+            className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold cursor-pointer transition-all ${
               setLog.completed
-                ? "bg-emerald-600 hover:bg-emerald-500 text-white shadow-md shadow-emerald-950"
-                : "bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700"
+                ? "bg-emerald-500 hover:bg-emerald-400 text-black shadow-sm"
+                : "bg-[#111111] hover:bg-[#1a1a1a] text-[#888888] hover:text-white border border-[#2a2a2a]"
             }`}
           >
-            <Check
-              className={`h-3.5 w-3.5 ${
-                setLog.completed ? "text-white" : "text-slate-400"
-              }`}
-            />
-            <span>{setLog.completed ? "Done" : "Mark Done"}</span>
+            <Check className="h-3.5 w-3.5" />
+            <span>{setLog.completed ? "Done" : "Mark"}</span>
           </button>
         </div>
       </div>
 
       {/* Video Modal Preview */}
       {showVideoModal && setLog.videoUrl && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-4 w-full max-w-md shadow-2xl relative">
-            <div className="flex items-center justify-between pb-3 mb-2 border-b border-slate-800">
-              <span className="text-sm font-semibold text-slate-200">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm">
+          <div className="bg-[#0a0a0a] border border-[#222222] rounded-2xl p-4 w-full max-w-md shadow-2xl relative">
+            <div className="flex items-center justify-between pb-3 mb-2 border-b border-[#222222]">
+              <span className="text-xs font-mono uppercase tracking-wider text-[#888888]">
                 Set {setIndex + 1} Recording Review
               </span>
               <button
                 onClick={() => setShowVideoModal(false)}
-                className="p-1 text-slate-400 hover:text-white rounded-lg"
+                className="p-1 text-[#888888] hover:text-white rounded-lg"
               >
-                <X className="h-5 w-5" />
+                <X className="h-4 w-4" />
               </button>
             </div>
-            <div className="rounded-2xl overflow-hidden bg-black aspect-video flex items-center justify-center">
+            <div className="rounded-xl overflow-hidden bg-black aspect-video flex items-center justify-center border border-[#1f1f1f]">
               <video
                 src={setLog.videoUrl}
                 controls
@@ -263,7 +257,7 @@ export function SetRow({ setLog, setIndex, onUpdate, onDelete }: SetRowProps) {
             <div className="mt-3 text-center">
               <button
                 onClick={() => setShowVideoModal(false)}
-                className="w-full py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-semibold"
+                className="w-full py-2 bg-[#161616] hover:bg-[#222222] text-white rounded-lg text-xs font-semibold border border-[#2e2e2e]"
               >
                 Close Preview
               </button>

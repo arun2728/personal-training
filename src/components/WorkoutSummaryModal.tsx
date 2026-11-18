@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { WorkoutSession } from "@/types/workout";
 import {
-  Trophy,
   Copy,
   Check,
   Share2,
@@ -50,7 +49,6 @@ export function WorkoutSummaryModal({
     });
   });
 
-  // Generate WhatsApp / Telegram share text
   const generateShareText = () => {
     let text = `🏋️‍♂️ Workout Summary — ${session.dayTitle}\n`;
     text += `📅 Date: ${session.date}\n`;
@@ -75,7 +73,6 @@ export function WorkoutSummaryModal({
     return text;
   };
 
-  // Generate Tab-Delimited text ready to paste directly into Google Sheets
   const generateSheetTsv = () => {
     let tsv = "Date\tWorkout Day\tExercise\tSet\tWeight (kg)\tReps\tVolume (kg)\tVideo Status\n";
     session.exercises.forEach((ex) => {
@@ -142,75 +139,83 @@ export function WorkoutSummaryModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto">
-      <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 w-full max-w-lg shadow-2xl relative my-8">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md overflow-y-auto">
+      <div className="bg-[#0a0a0a] border border-[#222222] rounded-2xl p-6 w-full max-w-lg shadow-2xl relative my-8">
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-5 right-5 text-slate-400 hover:text-white p-1 rounded-xl"
+          className="absolute top-4 right-4 text-[#888888] hover:text-white p-1 rounded-lg"
         >
-          <X className="h-5 w-5" />
+          <X className="h-4 w-4" />
         </button>
 
-        {/* Header Celebration */}
+        {/* Header */}
         <div className="text-center mb-6">
-          <div className="h-14 w-14 rounded-2xl bg-amber-500/20 border border-amber-500/30 text-amber-400 flex items-center justify-center mx-auto mb-3 shadow-inner">
-            <Trophy className="h-7 w-7" />
+          <div className="w-10 h-10 rounded-xl bg-black border border-[#2a2a2a] flex items-center justify-center mx-auto mb-3 text-white shadow-sm">
+            <svg
+              width="16"
+              height="14"
+              viewBox="0 0 76 65"
+              fill="#ffffff"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="M37.5274 0L75.0548 65H0L37.5274 0Z" />
+            </svg>
           </div>
-          <h2 className="text-xl font-bold text-white tracking-tight">
-            Workout Completed! 💪
+          <h2 className="text-lg font-semibold text-white tracking-tight">
+            Workout Finished
           </h2>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-[#888888] font-mono mt-1">
             {session.dayTitle} • {session.date}
           </p>
         </div>
 
-        {/* High-Level Stats Cards */}
-        <div className="grid grid-cols-3 gap-2.5 mb-6">
-          <div className="bg-slate-950/70 border border-slate-800 rounded-2xl p-3 text-center">
-            <div className="text-[10px] uppercase font-bold tracking-wider text-slate-500">
+        {/* High-Level Stats */}
+        <div className="grid grid-cols-3 gap-2 mb-5">
+          <div className="bg-black border border-[#222222] rounded-xl p-3 text-center">
+            <div className="text-[10px] uppercase font-mono tracking-wider text-[#666666]">
               Volume
             </div>
-            <div className="text-sm sm:text-base font-bold font-mono text-indigo-400 mt-1">
+            <div className="text-base font-bold font-mono text-white mt-1">
               {totalVolumeKg.toLocaleString()}
             </div>
-            <div className="text-[9px] text-slate-400">kg lifted</div>
+            <div className="text-[9px] text-[#666666] font-mono">kg total</div>
           </div>
 
-          <div className="bg-slate-950/70 border border-slate-800 rounded-2xl p-3 text-center">
-            <div className="text-[10px] uppercase font-bold tracking-wider text-slate-500">
+          <div className="bg-black border border-[#222222] rounded-xl p-3 text-center">
+            <div className="text-[10px] uppercase font-mono tracking-wider text-[#666666]">
               Sets Done
             </div>
-            <div className="text-sm sm:text-base font-bold font-mono text-emerald-400 mt-1">
+            <div className="text-base font-bold font-mono text-emerald-400 mt-1">
               {totalSetsCompleted}
             </div>
-            <div className="text-[9px] text-slate-400">completed</div>
+            <div className="text-[9px] text-[#666666] font-mono">completed</div>
           </div>
 
-          <div className="bg-slate-950/70 border border-slate-800 rounded-2xl p-3 text-center">
-            <div className="text-[10px] uppercase font-bold tracking-wider text-slate-500">
+          <div className="bg-black border border-[#222222] rounded-xl p-3 text-center">
+            <div className="text-[10px] uppercase font-mono tracking-wider text-[#666666]">
               Videos
             </div>
-            <div className="text-sm sm:text-base font-bold font-mono text-amber-400 mt-1">
+            <div className="text-base font-bold font-mono text-white mt-1">
               {totalVideos}
             </div>
-            <div className="text-[9px] text-slate-400">set clips</div>
+            <div className="text-[9px] text-[#666666] font-mono">clips ready</div>
           </div>
         </div>
 
         {/* Direct Google Sheets Sync */}
-        <div className="mb-4 p-4 rounded-2xl bg-slate-950/60 border border-slate-800">
+        <div className="mb-4 p-3.5 rounded-xl bg-black border border-[#222222]">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-2">
-              <FileSpreadsheet className="h-4 w-4 text-emerald-400" />
-              <span className="text-xs font-semibold text-slate-200">
-                Aanchal&apos;s Google Sheet
+              <FileSpreadsheet className="h-4 w-4 text-[#ededed]" />
+              <span className="text-xs font-medium text-white">
+                Google Sheet Sync
               </span>
             </div>
             <button
               onClick={handleSyncToSheets}
               disabled={syncing}
-              className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer disabled:opacity-50"
+              className="px-3 py-1 bg-white hover:bg-[#eaeaea] text-black rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer disabled:opacity-50"
             >
               <UploadCloud className="h-3.5 w-3.5" />
               <span>{syncing ? "Syncing..." : "Sync Now"}</span>
@@ -218,77 +223,75 @@ export function WorkoutSummaryModal({
           </div>
 
           {syncStatus === "success" && (
-            <div className="p-2.5 rounded-xl bg-emerald-950/40 border border-emerald-500/30 text-emerald-300 text-xs flex items-center gap-2 mt-2">
+            <div className="p-2.5 rounded-lg bg-[#0e1610] border border-[#1d3823] text-emerald-300 text-xs flex items-center gap-2 mt-2">
               <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400" />
               <span>{syncMessage}</span>
             </div>
           )}
 
           {syncStatus === "error" && (
-            <div className="p-2.5 rounded-xl bg-amber-950/40 border border-amber-500/30 text-amber-300 text-xs flex items-start gap-2 mt-2">
-              <AlertCircle className="h-4 w-4 shrink-0 text-amber-400 mt-0.5" />
+            <div className="p-2.5 rounded-lg bg-[#140c0c] border border-[#301a1a] text-[#ff8080] text-xs flex items-start gap-2 mt-2">
+              <AlertCircle className="h-4 w-4 shrink-0 text-[#ff6666] mt-0.5" />
               <div>
                 <p>{syncMessage}</p>
-                <p className="mt-1 text-[11px] text-slate-400">
-                  Tip: Use the &ldquo;Copy for Sheet&rdquo; button below to paste rows directly into your sheet right now.
+                <p className="mt-1 text-[11px] text-[#888888]">
+                  Tip: Click &ldquo;Copy for Sheet&rdquo; below to paste rows directly into your spreadsheet.
                 </p>
               </div>
             </div>
           )}
         </div>
 
-        {/* Quick Action Share Buttons */}
-        <div className="space-y-2.5 mb-6">
-          {/* WhatsApp Text Share */}
+        {/* Share Buttons */}
+        <div className="space-y-2 mb-5">
           <button
             onClick={copyWhatsApp}
-            className="w-full py-3 px-4 rounded-2xl bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white font-medium text-xs sm:text-sm flex items-center justify-center gap-2 transition-all cursor-pointer shadow-lg shadow-indigo-600/20"
+            className="w-full py-2.5 px-4 rounded-xl bg-[#141414] hover:bg-[#202020] border border-[#2e2e2e] text-white text-xs font-medium flex items-center justify-center gap-2 transition-all cursor-pointer"
           >
             {copiedWhatsapp ? (
               <>
-                <Check className="h-4 w-4 text-emerald-300" />
-                <span>Copied WhatsApp Summary to Clipboard!</span>
+                <Check className="h-3.5 w-3.5 text-emerald-400" />
+                <span className="text-emerald-400">Copied WhatsApp Summary!</span>
               </>
             ) : (
               <>
-                <Share2 className="h-4 w-4" />
+                <Share2 className="h-3.5 w-3.5 text-white" />
                 <span>Copy Summary for Aanchal (WhatsApp)</span>
               </>
             )}
           </button>
 
-          {/* Sheet Row Format Copy */}
           <button
             onClick={copySheetData}
-            className="w-full py-3 px-4 rounded-2xl bg-slate-800 hover:bg-slate-700 active:bg-slate-800 text-slate-200 font-medium text-xs sm:text-sm flex items-center justify-center gap-2 transition-all cursor-pointer border border-slate-700"
+            className="w-full py-2.5 px-4 rounded-xl bg-black hover:bg-[#111111] border border-[#222222] hover:border-[#333333] text-[#888888] hover:text-white text-xs font-mono flex items-center justify-center gap-2 transition-all cursor-pointer"
           >
             {copiedSheet ? (
               <>
-                <Check className="h-4 w-4 text-emerald-300" />
-                <span>Copied Sheet Columns to Clipboard!</span>
+                <Check className="h-3.5 w-3.5 text-emerald-400" />
+                <span className="text-emerald-400 font-sans">Copied Sheet Columns!</span>
               </>
             ) : (
               <>
-                <Copy className="h-4 w-4" />
-                <span>Copy Raw Rows for Google Sheet (Paste Anywhere)</span>
+                <Copy className="h-3.5 w-3.5" />
+                <span>Copy Raw Rows for Google Sheet</span>
               </>
             )}
           </button>
         </div>
 
         {/* Bottom Actions */}
-        <div className="flex items-center gap-2 pt-3 border-t border-slate-800">
+        <div className="flex items-center gap-2 pt-3 border-t border-[#1f1f1f]">
           <button
             onClick={onResetSession}
-            className="flex-1 py-2.5 text-xs text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded-xl transition-colors"
+            className="flex-1 py-2 text-xs text-[#888888] hover:text-[#ff6666] rounded-lg transition-colors font-mono"
           >
-            Start Fresh Workout
+            Reset Session
           </button>
           <button
             onClick={onClose}
-            className="flex-1 py-2.5 text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium rounded-xl transition-colors"
+            className="flex-1 py-2 text-xs bg-[#141414] hover:bg-[#202020] text-white font-medium rounded-lg transition-colors border border-[#2a2a2a]"
           >
-            Keep Editing
+            Back to Workout
           </button>
         </div>
       </div>

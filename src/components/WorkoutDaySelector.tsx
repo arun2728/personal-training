@@ -23,16 +23,20 @@ export function WorkoutDaySelector({
               key={d.dayNumber}
               type="button"
               onClick={() => onSelectDay(d.dayNumber)}
-              className={`px-4 py-2.5 rounded-2xl text-left transition-all cursor-pointer flex flex-col ${
+              className={`px-3.5 py-2 rounded-xl text-left transition-all cursor-pointer flex flex-col ${
                 isSelected
-                  ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/30 scale-[1.02]"
-                  : "bg-slate-900/80 hover:bg-slate-800 text-slate-400 hover:text-slate-200 border border-slate-800"
+                  ? "bg-white text-black shadow-sm"
+                  : "bg-[#0a0a0a] hover:bg-[#111111] text-[#888888] hover:text-white border border-[#222222] hover:border-[#333333]"
               }`}
             >
-              <span className="text-[11px] font-bold uppercase tracking-wider font-mono">
+              <span
+                className={`text-[10px] font-mono uppercase tracking-wider font-semibold ${
+                  isSelected ? "text-black/70" : "text-[#666666]"
+                }`}
+              >
                 Day {d.dayNumber}
               </span>
-              <span className="text-xs font-semibold truncate max-w-[110px]">
+              <span className="text-xs font-medium truncate max-w-[120px]">
                 {d.title.replace(/^Day \d+:\s*/, "")}
               </span>
             </button>

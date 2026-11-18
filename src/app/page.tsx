@@ -6,14 +6,13 @@ import {
   WorkoutDayTemplate,
   WorkoutSession,
   ExerciseLog,
-  SetLog,
 } from "@/types/workout";
 import { Navbar } from "@/components/Navbar";
 import { WorkoutDaySelector } from "@/components/WorkoutDaySelector";
 import { ExerciseCard } from "@/components/ExerciseCard";
 import { RestTimer } from "@/components/RestTimer";
 import { WorkoutSummaryModal } from "@/components/WorkoutSummaryModal";
-import { CheckCircle, Dumbbell, Sparkles } from "lucide-react";
+import { CheckCircle } from "lucide-react";
 
 export default function WorkoutDashboard() {
   const [selectedDayNumber, setSelectedDayNumber] = useState<number>(1);
@@ -80,7 +79,6 @@ export default function WorkoutDashboard() {
     if (!isLoaded || !activeSession) return;
     const storageKey = `pt_workout_draft_day_${selectedDayNumber}_${workoutDate}`;
     try {
-      // Exclude video blobs before saving to JSON storage
       const sanitizedSession = {
         ...activeSession,
         exercises: activeSession.exercises.map((ex) => ({
@@ -152,17 +150,27 @@ export default function WorkoutDashboard() {
 
   if (!isLoaded || !activeSession) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-950 text-slate-400">
+      <div className="min-h-screen flex items-center justify-center bg-black text-[#888888]">
         <div className="flex flex-col items-center gap-3">
-          <Dumbbell className="h-8 w-8 animate-spin text-indigo-500" />
-          <p className="text-sm font-medium">Loading Arun&apos;s Workout...</p>
+          <div className="w-8 h-8 rounded-lg bg-[#0a0a0a] border border-[#2a2a2a] flex items-center justify-center animate-pulse">
+            <svg
+              width="16"
+              height="14"
+              viewBox="0 0 76 65"
+              fill="#ffffff"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="M37.5274 0L75.0548 65H0L37.5274 0Z" />
+            </svg>
+          </div>
+          <p className="text-xs font-mono">Loading Workout...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col pb-24 selection:bg-indigo-500 selection:text-white">
+    <div className="min-h-screen bg-black text-[#ededed] flex flex-col pb-24 selection:bg-white selection:text-black">
       {/* Top Navigation */}
       <Navbar
         workoutDate={workoutDate}
@@ -171,15 +179,15 @@ export default function WorkoutDashboard() {
         completedSetsCount={completedSetsCount}
       />
 
-      <main className="max-w-2xl mx-auto w-full px-4 pt-5 space-y-5">
+      <main className="max-w-2xl mx-auto w-full px-4 pt-5 space-y-4">
         {/* Day Selector */}
         <div>
-          <div className="flex items-center justify-between mb-2.5">
-            <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-              Select Workout Split
+          <div className="flex items-center justify-between mb-2">
+            <h2 className="text-[11px] font-mono uppercase tracking-wider text-[#666666]">
+              Select Routine
             </h2>
-            <span className="text-[11px] text-indigo-400 font-medium">
-              5-Day Plan
+            <span className="text-[11px] font-mono text-[#888888]">
+              5-Day Split
             </span>
           </div>
           <WorkoutDaySelector
@@ -190,34 +198,34 @@ export default function WorkoutDashboard() {
         </div>
 
         {/* Day Overview Banner */}
-        <div className="p-4 rounded-3xl bg-gradient-to-r from-indigo-950/60 via-slate-900/80 to-slate-900 border border-indigo-900/40 shadow-xl">
+        <div className="p-4 rounded-2xl bg-[#0a0a0a] border border-[#222222] shadow-sm">
           <div className="flex items-start justify-between gap-3">
             <div>
-              <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+              <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#141414] text-[#888888] border border-[#262626]">
                 {currentDayTemplate.title}
               </span>
-              <h3 className="text-base sm:text-lg font-bold text-white mt-1.5">
+              <h3 className="text-base font-semibold text-white mt-1.5 tracking-tight">
                 {currentDayTemplate.focus}
               </h3>
-              <p className="text-xs text-slate-400 mt-0.5">
+              <p className="text-xs text-[#888888] mt-0.5 font-mono">
                 {currentDayTemplate.exercises.length} exercises prescribed by Aanchal
               </p>
             </div>
 
-            {/* Overall Progress Ring / Counter */}
-            <div className="text-right shrink-0 bg-slate-950/60 border border-slate-800/80 rounded-2xl px-3 py-2">
+            {/* Overall Progress Counter */}
+            <div className="text-right shrink-0 bg-black border border-[#222222] rounded-xl px-3 py-1.5">
               <div className="text-xs font-mono font-bold text-emerald-400">
                 {completedSetsCount}/{totalSetsCount}
               </div>
-              <div className="text-[9px] uppercase tracking-wider text-slate-500">
-                Sets Done
+              <div className="text-[9px] uppercase tracking-wider text-[#555555] font-mono">
+                Sets
               </div>
             </div>
           </div>
         </div>
 
         {/* Exercise Cards */}
-        <div className="space-y-4">
+        <div className="space-y-3">
           {currentDayTemplate.exercises.map((template, index) => {
             const exerciseLog =
               activeSession.exercises[index] || {
@@ -240,12 +248,12 @@ export default function WorkoutDashboard() {
         </div>
 
         {/* Bottom Finish Button */}
-        <div className="pt-4">
+        <div className="pt-3">
           <button
             onClick={() => setShowSummaryModal(true)}
-            className="w-full py-4 px-5 rounded-2xl bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white font-semibold text-sm sm:text-base flex items-center justify-center gap-2.5 shadow-xl shadow-indigo-600/30 transition-all cursor-pointer"
+            className="w-full py-3.5 px-4 rounded-xl bg-white hover:bg-[#eaeaea] active:bg-[#d4d4d4] text-black font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer"
           >
-            <CheckCircle className="h-5 w-5" />
+            <CheckCircle className="h-4 w-4" />
             <span>Finish Workout &amp; Send to Aanchal</span>
           </button>
         </div>

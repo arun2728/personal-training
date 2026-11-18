@@ -17,7 +17,6 @@ export function RestTimer() {
       }, 1000);
     } else if (secondsLeft === 0 && isRunning) {
       setIsRunning(false);
-      // Native vibration if on mobile
       if (typeof window !== "undefined" && "vibrate" in navigator) {
         navigator.vibrate([200, 100, 200]);
       }
@@ -53,27 +52,31 @@ export function RestTimer() {
           setIsOpen(true);
           setIsRunning(true);
         }}
-        className="fixed bottom-20 right-4 z-40 bg-indigo-600 hover:bg-indigo-500 text-white p-3.5 rounded-full shadow-lg shadow-indigo-600/30 flex items-center gap-2 text-sm font-semibold transition-all transform active:scale-95 cursor-pointer"
+        className="fixed bottom-20 right-4 z-40 bg-white hover:bg-[#eaeaea] text-black px-3.5 py-3 rounded-full shadow-xl border border-white/20 flex items-center gap-2 text-xs font-semibold font-mono transition-all transform active:scale-95 cursor-pointer"
         title="Open Rest Timer"
       >
-        <Timer className="h-5 w-5" />
-        {isRunning && <span className="font-mono text-xs">{formatTime(secondsLeft)}</span>}
+        <Timer className="h-4 w-4" />
+        {isRunning ? (
+          <span>{formatTime(secondsLeft)}</span>
+        ) : (
+          <span>Timer</span>
+        )}
       </button>
     );
   }
 
   return (
-    <div className="fixed bottom-20 left-4 right-4 sm:left-auto sm:right-6 sm:w-80 z-40 bg-slate-900/95 border border-slate-700/80 backdrop-blur-xl rounded-2xl p-4 shadow-2xl shadow-black/60">
-      <div className="flex items-center justify-between mb-3 pb-2 border-b border-slate-800">
+    <div className="fixed bottom-20 left-4 right-4 sm:left-auto sm:right-6 sm:w-80 z-40 bg-[#0a0a0a]/95 border border-[#2a2a2a] backdrop-blur-xl rounded-2xl p-4 shadow-2xl">
+      <div className="flex items-center justify-between mb-3 pb-2 border-b border-[#222222]">
         <div className="flex items-center gap-2">
-          <Timer className="h-4 w-4 text-indigo-400" />
-          <span className="text-xs font-semibold uppercase tracking-wider text-slate-300">
+          <Timer className="h-4 w-4 text-white" />
+          <span className="text-[11px] font-mono uppercase tracking-wider text-[#888888]">
             Rest Stopwatch
           </span>
         </div>
         <button
           onClick={() => setIsOpen(false)}
-          className="text-slate-400 hover:text-slate-200 p-1 rounded-lg"
+          className="text-[#888888] hover:text-white p-1 rounded-lg"
         >
           <X className="h-4 w-4" />
         </button>
@@ -84,7 +87,7 @@ export function RestTimer() {
         <div
           className={`font-mono text-3xl font-bold tracking-tight ${
             secondsLeft === 0
-              ? "text-rose-400 animate-pulse"
+              ? "text-[#ff6666] animate-pulse"
               : secondsLeft <= 10
               ? "text-amber-400"
               : "text-white"
@@ -96,7 +99,7 @@ export function RestTimer() {
         <div className="flex items-center gap-1.5">
           <button
             onClick={() => addTime(30)}
-            className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs text-slate-300 font-medium flex items-center gap-0.5 cursor-pointer"
+            className="p-2 rounded-lg bg-[#141414] hover:bg-[#202020] border border-[#262626] text-xs text-[#ededed] font-mono flex items-center gap-0.5 cursor-pointer"
             title="+30 seconds"
           >
             <Plus className="h-3 w-3" />
@@ -104,17 +107,17 @@ export function RestTimer() {
           </button>
           <button
             onClick={() => resetTimer(initialSeconds)}
-            className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 cursor-pointer"
+            className="p-2 rounded-lg bg-[#141414] hover:bg-[#202020] border border-[#262626] text-[#888888] hover:text-white cursor-pointer"
             title="Reset"
           >
-            <RotateCcw className="h-4 w-4" />
+            <RotateCcw className="h-3.5 w-3.5" />
           </button>
           <button
             onClick={toggleRun}
-            className={`p-2.5 rounded-xl font-medium cursor-pointer ${
+            className={`p-2 rounded-lg font-medium cursor-pointer transition-colors ${
               isRunning
-                ? "bg-amber-600 hover:bg-amber-500 text-white"
-                : "bg-indigo-600 hover:bg-indigo-500 text-white"
+                ? "bg-[#222222] text-white border border-[#333333]"
+                : "bg-white text-black hover:bg-[#eaeaea]"
             }`}
           >
             {isRunning ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
@@ -128,10 +131,10 @@ export function RestTimer() {
           <button
             key={secs}
             onClick={() => resetTimer(secs)}
-            className={`py-1.5 rounded-lg text-xs font-medium cursor-pointer transition-colors ${
+            className={`py-1 rounded-lg text-xs font-mono font-medium cursor-pointer transition-colors ${
               initialSeconds === secs
-                ? "bg-indigo-600/30 border border-indigo-500 text-indigo-300"
-                : "bg-slate-800/80 hover:bg-slate-800 text-slate-400 border border-transparent"
+                ? "bg-white text-black font-semibold"
+                : "bg-[#111111] hover:bg-[#1a1a1a] text-[#888888] border border-[#222222]"
             }`}
           >
             {secs}s
