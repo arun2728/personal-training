@@ -12,6 +12,8 @@ import {
   recordExerciseFeedback,
 } from "@/lib/workoutHistory";
 import { Navbar } from "@/components/Navbar";
+import { SheetTabsNav } from "@/components/SheetTabsNav";
+import { BottomNav } from "@/components/BottomNav";
 import { WorkoutDaySelector } from "@/components/WorkoutDaySelector";
 import { ExerciseCard } from "@/components/ExerciseCard";
 import { RestTimer } from "@/components/RestTimer";
@@ -64,13 +66,17 @@ export default function WorkoutDashboard() {
       exercises: currentTemplate.exercises.map((ex) => ({
         exerciseId: ex.id,
         exerciseName: ex.name,
-        sets: Array.from({ length: ex.targetSets }).map((_, idx) => ({
-          id: `${ex.id}-set-${idx + 1}`,
-          setNumber: idx + 1,
-          weightKg: ex.targetWeightKg || 0,
-          reps: parseInt(ex.targetReps) || 10,
-          completed: false,
-        })),
+        sets: Array.from({ length: ex.targetSets }).map((_, idx) => {
+          const isWarmup = idx < (ex.warmupSets || 0);
+          return {
+            id: `${ex.id}-set-${idx + 1}`,
+            setNumber: idx + 1,
+            setType: isWarmup ? "warmup" : "working",
+            weightKg: isWarmup ? (ex.targetWeightKg ? Math.round(ex.targetWeightKg * 0.6) : 0) : (ex.targetWeightKg || 0),
+            reps: parseInt(ex.targetReps) || 10,
+            completed: false,
+          };
+        }),
       })),
     };
 
@@ -140,13 +146,17 @@ export default function WorkoutDashboard() {
         exercises: currentDayTemplate.exercises.map((ex) => ({
           exerciseId: ex.id,
           exerciseName: ex.name,
-          sets: Array.from({ length: ex.targetSets }).map((_, idx) => ({
-            id: `${ex.id}-set-${idx + 1}`,
-            setNumber: idx + 1,
-            weightKg: ex.targetWeightKg || 0,
-            reps: parseInt(ex.targetReps) || 10,
-            completed: false,
-          })),
+          sets: Array.from({ length: ex.targetSets }).map((_, idx) => {
+            const isWarmup = idx < (ex.warmupSets || 0);
+            return {
+              id: `${ex.id}-set-${idx + 1}`,
+              setNumber: idx + 1,
+              setType: isWarmup ? "warmup" : "working",
+              weightKg: isWarmup ? (ex.targetWeightKg ? Math.round(ex.targetWeightKg * 0.6) : 0) : (ex.targetWeightKg || 0),
+              reps: parseInt(ex.targetReps) || 10,
+              completed: false,
+            };
+          }),
         })),
       };
       setActiveSession(freshSession);
@@ -178,21 +188,24 @@ export default function WorkoutDashboard() {
               <path d="M37.5274 0L75.0548 65H0L37.5274 0Z" />
             </svg>
           </div>
-          <p className="text-xs font-mono">Loading Workout...</p>
+          <p className="text-xs font-mono">Loading Workout Plan...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-black text-[#ededed] flex flex-col pb-24 selection:bg-white selection:text-black">
-      {/* Top Navigation */}
+    <div className="min-h-screen bg-black text-[#ededed] flex flex-col pb-28 selection:bg-white selection:text-black">
+      {/* Top Header Navbar */}
       <Navbar
         workoutDate={workoutDate}
         onDateChange={setWorkoutDate}
         onFinishWorkout={() => setShowSummaryModal(true)}
         completedSetsCount={completedSetsCount}
       />
+
+      {/* Spreadsheet Tabs Selector (All 12 Sheets) */}
+      <SheetTabsNav />
 
       <main className="max-w-2xl mx-auto w-full px-4 pt-5 space-y-4">
         {/* Day Selector */}
@@ -202,7 +215,7 @@ export default function WorkoutDashboard() {
               Select Routine
             </h2>
             <span className="text-[11px] font-mono text-[#888888]">
-              5-Day Split
+              5-Day Split by Aanchal
             </span>
           </div>
           <WorkoutDaySelector
@@ -282,6 +295,9 @@ export default function WorkoutDashboard() {
 
       {/* Floating Rest Stopwatch */}
       <RestTimer />
+
+      {/* Bottom Nav for Mobile */}
+      <BottomNav />
 
       {/* Celebration & Sync Modal */}
       {showSummaryModal && (

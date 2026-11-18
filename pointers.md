@@ -1,0 +1,1 @@
+1. When uploading the video to R2 we need to compress the video and reduce it size.

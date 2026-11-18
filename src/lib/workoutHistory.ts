@@ -1,215 +1,247 @@
 import { HistoricalFeedback, CoachFeedback, SetLog } from "@/types/workout";
 
-// Realistic initial previous-week feedback from Aanchal for the 5-day split
+// Authentic prior feedback from Coach Aanchal matching Arun's actual exercises from the training spreadsheet
 export const DEFAULT_PREVIOUS_FEEDBACK: Record<string, HistoricalFeedback> = {
-  // Day 1: Chest & Triceps
+  // Day 1: Lower Body A
   "d1-ex1": {
-    date: "7 days ago",
+    date: "Prior Week",
     comment:
-      "Great control on sets 1-3. On the final set, slow down the descent. Ready to bump weight to 22.5kg today!",
+      "2 warmups at 10kg were smooth. On working sets, 12.5kg looked solid. Keep hips hinging back without bending lower spine. Target 12.5 - 15kg today!",
     status: "increase-weight",
-    lastWeightKg: 20,
+    lastWeightKg: 12.5,
     lastReps: 10,
   },
   "d1-ex2": {
-    date: "7 days ago",
+    date: "Prior Week",
     comment:
-      "Elbows flared slightly on rep 7. Keep your lats engaged and touch the same spot on your lower chest every rep.",
-    status: "needs-adjustment",
-    lastWeightKg: 50,
-    lastReps: 8,
-  },
-  "d1-ex3": {
-    date: "7 days ago",
-    comment:
-      "Squeeze at the peak was excellent. Keep 12.5kg and focus on the deep stretch at the bottom.",
-    status: "approved",
-    lastWeightKg: 12.5,
-    lastReps: 15,
-  },
-  "d1-ex4": {
-    date: "7 days ago",
-    comment:
-      "Lock your elbows strictly at your sides. Avoid rocking your shoulders forward on the lockout.",
-    status: "needs-adjustment",
-    lastWeightKg: 20,
+      "Control the eccentric descent on the last 2 reps. Good hip placement on pad. Let's aim for 30-35kg today.",
+    status: "increase-weight",
+    lastWeightKg: 30,
     lastReps: 12,
   },
-  "d1-ex5": {
-    date: "7 days ago",
+  "d1-ex3": {
+    date: "Prior Week",
     comment:
-      "Full range of motion achieved. Triceps were completely isolated. You can try 18kg today if feeling fresh.",
-    status: "increase-weight",
-    lastWeightKg: 16,
-    lastReps: 10,
+      "Lunges were clean with 10kg. Maintain upright torso and full 90-degree depth on every single step.",
+    status: "approved",
+    lastWeightKg: 10,
+    lastReps: 12,
   },
-
-  // Day 2: Back & Biceps
-  "d2-ex1": {
-    date: "6 days ago",
+  "d1-ex4": {
+    date: "Prior Week",
     comment:
-      "Drive your elbows straight down toward your hip pockets. Form was very clean, let's aim for 47.5kg.",
-    status: "increase-weight",
-    lastWeightKg: 45,
-    lastReps: 10,
-  },
-  "d2-ex2": {
-    date: "6 days ago",
-    comment:
-      "Maintain the 45-degree hip hinge throughout. Avoid using momentum on the last 2 reps.",
-    status: "needs-adjustment",
-    lastWeightKg: 40,
-    lastReps: 8,
-  },
-  "d2-ex3": {
-    date: "6 days ago",
-    comment:
-      "Pause for 1 second at the contraction felt much better. Thickness in upper back is improving.",
+      "Set 2 and 3 at 40kg were done with good intensity. Keep 40kg and push until 15 clean reps before increasing.",
     status: "approved",
     lastWeightKg: 40,
+    lastReps: 13,
+  },
+  "d1-ex5": {
+    date: "Prior Week",
+    comment:
+      "Calf raises were 25kg and 4kg KB for tibialis. Remember do not skip the tibialis raises after calf raises!",
+    status: "needs-adjustment",
+    lastWeightKg: 25,
+    lastReps: 15,
+  },
+  "d1-ex6": {
+    date: "Prior Week",
+    comment:
+      "Form was much better this time! Keep curling ribcage downwards and avoid using arms to pull the cable.",
+    status: "approved",
+    lastWeightKg: 15,
+    lastReps: 15,
+  },
+
+  // Day 2: Upper Body A
+  "d2-ex1": {
+    date: "Prior Week",
+    comment:
+      "All sets at 30kg completed cleanly. Keep chest glued against pad. Push for 30kg till 10 strict reps.",
+    status: "approved",
+    lastWeightKg: 30,
+    lastReps: 12,
+  },
+  "d2-ex2": {
+    date: "Prior Week",
+    comment:
+      "Solid pull to upper chest at 40kg. Target 40kg until 15 full reps with slow negative release.",
+    status: "approved",
+    lastWeightKg: 40,
+    lastReps: 12,
+  },
+  "d2-ex3": {
+    date: "Prior Week",
+    comment:
+      "Rear delt engagement was visible at 35kg. Lead with the elbows, avoid shrugging your traps up.",
+    status: "approved",
+    lastWeightKg: 35,
     lastReps: 12,
   },
   "d2-ex4": {
-    date: "6 days ago",
+    date: "Prior Week",
     comment:
-      "Keep wrists supinated throughout the concentric. Don't let your shoulders roll forward.",
-    status: "approved",
-    lastWeightKg: 10,
-    lastReps: 12,
-  },
-  "d2-ex5": {
-    date: "6 days ago",
-    comment:
-      "Brachialis engagement was visible. Controlled tempo was spot on. Ready for 15kg.",
-    status: "increase-weight",
-    lastWeightKg: 12.5,
+      "Use lighter controlled weight (15kg DBs). Focus on strict vertical pressing line without excessive lower back arch.",
+    status: "needs-adjustment",
+    lastWeightKg: 15,
     lastReps: 10,
   },
-
-  // Day 3: Legs & Core
-  "d3-ex1": {
-    date: "5 days ago",
+  "d2-ex5": {
+    date: "Prior Week",
     comment:
-      "Depth was consistently at parallel. Make sure to brace your core tight before descending.",
+      "Pec fly at 35kg was deep. Lateral raises with 5kg had great form. Ready to bump Pec fly to 40kg and DB to 6-7.5kg.",
+    status: "increase-weight",
+    lastWeightKg: 35,
+    lastReps: 12,
+  },
+  "d2-ex6": {
+    date: "Prior Week",
+    comment:
+      "Triceps locked at 35kg and hammer curls at 7.5kg felt strong. Keep wrists neutral on hammer curls.",
     status: "approved",
-    lastWeightKg: 60,
+    lastWeightKg: 35,
+    lastReps: 12,
+  },
+  "d2-ex7": {
+    date: "Prior Week",
+    comment:
+      "Control the swing. Squeeze abs at the top to roll pelvis upwards toward ribs.",
+    status: "approved",
+    lastWeightKg: 0,
+    lastReps: 12,
+  },
+
+  // Day 3: Lower Body B
+  "d3-ex1": {
+    date: "Prior Week",
+    comment:
+      "Smith machine squat form is improving. Target 10-12.5kg each side with deeper depth and tight core brace.",
+    status: "increase-weight",
+    lastWeightKg: 10,
     lastReps: 8,
   },
   "d3-ex2": {
-    date: "5 days ago",
+    date: "Prior Week",
     comment:
-      "Push hips back further and keep the bar shaved to your shins to maximize hamstring tension.",
-    status: "needs-adjustment",
-    lastWeightKg: 50,
-    lastReps: 10,
+      "All sets at 60kg each side were solid. Target 60-70kg each side today. Do not lock out knees at top.",
+    status: "increase-weight",
+    lastWeightKg: 60,
+    lastReps: 9,
   },
   "d3-ex3": {
-    date: "5 days ago",
+    date: "Prior Week",
     comment:
-      "Do not lock out your knees at the top. Keep continuous tension on the quads.",
-    status: "needs-adjustment",
-    lastWeightKg: 100,
-    lastReps: 12,
+      "Adductor squeeze was steady at 40kg. Target 45kg today with a 1-sec squeeze at peak contraction.",
+    status: "increase-weight",
+    lastWeightKg: 40,
+    lastReps: 10,
   },
   "d3-ex4": {
-    date: "5 days ago",
+    date: "Prior Week",
     comment:
-      "Stride length was consistent. Good knee stability on both sides.",
+      "Bulgarian split squats with 7.5kg dumbbells. Balance was steady. You can try 7.5 - 10kg today if knees feel warm.",
     status: "approved",
-    lastWeightKg: 12.5,
+    lastWeightKg: 7.5,
     lastReps: 12,
   },
   "d3-ex5": {
-    date: "5 days ago",
+    date: "Prior Week",
     comment:
-      "Eliminate swing between reps. Pause at the bottom before initiating the next tuck.",
-    status: "approved",
-    lastWeightKg: 0,
-    lastReps: 15,
+      "Hamstring and glute lockout was clean. Ready to hold a 10kg plate during hyperextensions today.",
+    status: "increase-weight",
+    lastWeightKg: 10,
+    lastReps: 14,
   },
 
-  // Day 4: Shoulders & Abs
+  // Day 4: Upper Body B
   "d4-ex1": {
-    date: "4 days ago",
+    date: "Prior Week",
     comment:
-      "Pressing path was straight and locked out overhead smoothly. Move up to 20kg dumbbells today.",
+      "Full chest to floor achieved on push ups. Try performing with a 10kg plate or strict slow eccentrics.",
     status: "increase-weight",
-    lastWeightKg: 18,
+    lastWeightKg: 10,
     lastReps: 10,
   },
   "d4-ex2": {
-    date: "4 days ago",
+    date: "Prior Week",
     comment:
-      "Lead with the elbows and tilt pinkies slightly upward. Do not shrug your traps up.",
+      "Good decision lowering the weight when form felt off. Keep dumbbells at 12.5 - 15kg and master the pressing groove.",
     status: "needs-adjustment",
-    lastWeightKg: 8,
-    lastReps: 15,
+    lastWeightKg: 12.5,
+    lastReps: 10,
   },
   "d4-ex3": {
-    date: "4 days ago",
+    date: "Prior Week",
     comment:
-      "Great external rotation at the finish. Rear delts were properly activated.",
+      "Pec fly was 35kg. Nice deep horizontal stretch across the pecs. Keep 35kg today.",
     status: "approved",
-    lastWeightKg: 20,
-    lastReps: 15,
+    lastWeightKg: 35,
+    lastReps: 12,
   },
   "d4-ex4": {
-    date: "4 days ago",
+    date: "Prior Week",
     comment:
-      "2-second hold at the top was maintained on all sets. Traps were burning!",
+      "5kg each side on cable lateral raises is the sweet spot. Lead with elbows, don't jerk the stack.",
     status: "approved",
-    lastWeightKg: 24,
-    lastReps: 14,
+    lastWeightKg: 5,
+    lastReps: 15,
   },
   "d4-ex5": {
-    date: "4 days ago",
+    date: "Prior Week",
     comment:
-      "Ribs stayed locked down. Excellent core stability during the full 60 seconds.",
+      "Overhead cable extension + incline curls felt great! Continue with 15-20kg on cable and 7.5kg on DB curls.",
     status: "approved",
-    lastWeightKg: 0,
-    lastReps: 60,
+    lastWeightKg: 15,
+    lastReps: 12,
+  },
+  "d4-ex6": {
+    date: "Prior Week",
+    comment:
+      "Cable crunches at 10-15kg. Focus on pulling down with your abdominal muscles, not pulling down with arms.",
+    status: "approved",
+    lastWeightKg: 15,
+    lastReps: 15,
   },
 
-  // Day 5: Full Body & Weak Points
+  // Day 5: Mix
   "d5-ex1": {
-    date: "3 days ago",
+    date: "Prior Week",
     comment:
-      "Hip hinge and leg drive were synchronized. Keep the bar path vertical. Ready for 75kg.",
-    status: "increase-weight",
-    lastWeightKg: 70,
+      "5 reps per set achieved. Focus on full dead hang stretch at bottom and driving chest up to bar.",
+    status: "approved",
+    lastWeightKg: 0,
     lastReps: 5,
   },
   "d5-ex2": {
-    date: "3 days ago",
+    date: "Prior Week",
     comment:
-      "Full chest lockout on every repetition. Form looked crisp.",
+      "Straight arm pulldown at 25-30kg felt good. When fatigue kicks in, lower slightly to maintain lat isolation.",
     status: "approved",
-    lastWeightKg: 0,
+    lastWeightKg: 25,
     lastReps: 12,
   },
   "d5-ex3": {
-    date: "3 days ago",
+    date: "Prior Week",
     comment:
-      "Front knee tracked properly over the mid-foot. Deep hip stretch achieved.",
+      "Face pulls at 25kg. Keep elbows high and externally rotate at the top to hit the rear delts and rotator cuff.",
+    status: "approved",
+    lastWeightKg: 25,
+    lastReps: 12,
+  },
+  "d5-ex4": {
+    date: "Prior Week",
+    comment:
+      "Bayesian curls gave great bicep stretch. 10kg each arm was spot on. Maintain 2-second eccentric.",
     status: "approved",
     lastWeightKg: 10,
     lastReps: 10,
   },
-  "d5-ex4": {
-    date: "3 days ago",
-    comment:
-      "Keep elbows planted firmly on the pad. Don't lift off the bench to assist.",
-    status: "needs-adjustment",
-    lastWeightKg: 15,
-    lastReps: 10,
-  },
   "d5-ex5": {
-    date: "3 days ago",
+    date: "Prior Week",
     comment:
-      "Controlled overhead extension. Great mind-muscle connection with long head.",
-    status: "approved",
-    lastWeightKg: 15,
-    lastReps: 12,
+      "30-40 seconds held with good abdominal brace. Ready to try 10-15kg plate on back for 35-45 seconds.",
+    status: "increase-weight",
+    lastWeightKg: 10,
+    lastReps: 40,
   },
 };
 
@@ -232,7 +264,6 @@ export function getPreviousFeedbackForExercise(
     if (raw) {
       const records: HistoricalFeedback[] = JSON.parse(raw);
       if (Array.isArray(records) && records.length > 0) {
-        // Find most recent record before currentDate
         const filtered = currentDate
           ? records.filter((r) => r.date < currentDate)
           : records;
@@ -265,7 +296,6 @@ export function recordExerciseFeedback(
     const raw = localStorage.getItem(historyKey);
     const records: HistoricalFeedback[] = raw ? JSON.parse(raw) : [];
 
-    // Find best set weight/reps
     let bestWeight = 0;
     let bestReps = 0;
     if (sets) {
@@ -285,7 +315,6 @@ export function recordExerciseFeedback(
       lastReps: bestReps > 0 ? bestReps : undefined,
     };
 
-    // Update or append for this date
     const existingIndex = records.findIndex((r) => r.date === date);
     if (existingIndex >= 0) {
       records[existingIndex] = newRecord;
@@ -293,7 +322,6 @@ export function recordExerciseFeedback(
       records.push(newRecord);
     }
 
-    // Sort chronologically
     records.sort((a, b) => a.date.localeCompare(b.date));
     localStorage.setItem(historyKey, JSON.stringify(records));
   } catch {

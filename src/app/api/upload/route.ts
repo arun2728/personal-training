@@ -10,19 +10,56 @@ export async function POST(request: Request) {
   try {
     const contentType = request.headers.get("content-type") || "";
 
-    // Presigned upload URL request (for Cloudflare R2 / S3 / Supabase)
+    // 1. JSON Request for Presigned Upload (Cloudflare R2 / S3)
     if (contentType.includes("application/json")) {
-      const { fileName, fileType } = await request.json();
-      
-      const storageBucket = process.env.STORAGE_BUCKET;
-      const storageKey = `workouts/${Date.now()}-${fileName.replace(/[^a-zA-Z0-9.-]/g, "_")}`;
+      const { fileName, fileType, compressed } = await request.json();
+
+      const r2Bucket = process.env.R2_BUCKET_NAME || process.env.STORAGE_BUCKET;
+      const r2PublicDomain = process.env.R2_PUBLIC_DOMAIN;
+      const sanitizedName = fileName
+        ? fileName.replace(/[^a-zA-Z0-9.-]/g, "_")
+        : `video_${Date.now()}.mp4`;
+      const storageKey = `workouts/${Date.now()}-${sanitizedName}`;
+
+      const publicUrl = r2PublicDomain
+        ? `https://${r2PublicDomain.replace(/^https?:\/\//, "")}/${storageKey}`
+        : `/uploads/${storageKey}`;
 
       return NextResponse.json({
         success: true,
-        uploadMode: storageBucket ? "s3-presigned" : "client-session",
+        uploadMode: r2Bucket ? "cloudflare-r2" : "client-session",
         storageKey,
-        // In local/session mode, client keeps object URL or direct upload
-        url: `/uploads/${storageKey}`,
+        publicUrl,
+        compressed: !!compressed,
+      });
+    }
+
+    // 2. Direct FormData / Multipart upload
+    if (contentType.includes("multipart/form-data")) {
+      const formData = await request.formData();
+      const file = formData.get("file") as File | null;
+
+      if (!file) {
+        return NextResponse.json(
+          { error: "No video file provided" },
+          { status: 400 }
+        );
+      }
+
+      const sanitizedName = file.name.replace(/[^a-zA-Z0-9.-]/g, "_");
+      const storageKey = `workouts/${Date.now()}-${sanitizedName}`;
+      const r2PublicDomain = process.env.R2_PUBLIC_DOMAIN;
+
+      const publicUrl = r2PublicDomain
+        ? `https://${r2PublicDomain.replace(/^https?:\/\//, "")}/${storageKey}`
+        : `/uploads/${storageKey}`;
+
+      return NextResponse.json({
+        success: true,
+        fileName: file.name,
+        sizeBytes: file.size,
+        storageKey,
+        publicUrl,
       });
     }
 

@@ -2,18 +2,40 @@
 
 import { useRef, useState } from "react";
 import { SetLog } from "@/types/workout";
-import { Check, Video, Trash2, Play, Plus, Minus, X } from "lucide-react";
+import { compressVideo } from "@/lib/videoCompressor";
+import {
+  Check,
+  Video,
+  Trash2,
+  Play,
+  Plus,
+  Minus,
+  X,
+  Loader2,
+  Flame,
+} from "lucide-react";
 
 interface SetRowProps {
   setLog: SetLog;
   setIndex: number;
+  isWarmup?: boolean;
+  workingSetNumber?: number;
   onUpdate: (updated: SetLog) => void;
   onDelete: () => void;
 }
 
-export function SetRow({ setLog, setIndex, onUpdate, onDelete }: SetRowProps) {
+export function SetRow({
+  setLog,
+  setIndex,
+  isWarmup = false,
+  workingSetNumber,
+  onUpdate,
+  onDelete,
+}: SetRowProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [showVideoModal, setShowVideoModal] = useState(false);
+  const [compressProgress, setCompressProgress] = useState<number | null>(null);
+  const [isCompressing, setIsCompressing] = useState(false);
 
   const handleWeightChange = (delta: number) => {
     const newWeight = Math.max(0, Math.round((setLog.weightKg + delta) * 10) / 10);
@@ -25,17 +47,52 @@ export function SetRow({ setLog, setIndex, onUpdate, onDelete }: SetRowProps) {
     onUpdate({ ...setLog, reps: newReps });
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const objectUrl = URL.createObjectURL(file);
+    // First create preview object URL immediately so user gets instant feedback
+    const previewUrl = URL.createObjectURL(file);
     onUpdate({
       ...setLog,
-      videoUrl: objectUrl,
+      videoUrl: previewUrl,
       videoFileName: file.name,
       videoBlob: file,
+      isCompressing: true,
     });
+
+    // Run client-side compression in background
+    setIsCompressing(true);
+    setCompressProgress(1);
+
+    try {
+      const result = await compressVideo(file, {
+        onProgress: (p) => setCompressProgress(p),
+      });
+
+      const compressedUrl = URL.createObjectURL(result.file);
+      onUpdate({
+        ...setLog,
+        videoUrl: compressedUrl,
+        compressedVideoUrl: compressedUrl,
+        videoFileName: result.file instanceof File ? result.file.name : file.name,
+        videoBlob: result.file,
+        compressionRatio: result.reductionPercentage,
+        isCompressing: false,
+      });
+    } catch {
+      // Fall back to original file if compression failed
+      onUpdate({
+        ...setLog,
+        videoUrl: previewUrl,
+        videoFileName: file.name,
+        videoBlob: file,
+        isCompressing: false,
+      });
+    } finally {
+      setIsCompressing(false);
+      setCompressProgress(null);
+    }
   };
 
   const removeVideo = (e: React.MouseEvent) => {
@@ -43,8 +100,11 @@ export function SetRow({ setLog, setIndex, onUpdate, onDelete }: SetRowProps) {
     onUpdate({
       ...setLog,
       videoUrl: undefined,
+      compressedVideoUrl: undefined,
       videoFileName: undefined,
       videoBlob: undefined,
+      compressionRatio: undefined,
+      isCompressing: false,
     });
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
@@ -54,7 +114,11 @@ export function SetRow({ setLog, setIndex, onUpdate, onDelete }: SetRowProps) {
       <div
         className={`p-3 rounded-xl border transition-all ${
           setLog.completed
-            ? "bg-[#0b140e] border-[#1d3823]"
+            ? isWarmup
+              ? "bg-[#141009] border-[#38260d]"
+              : "bg-[#0b140e] border-[#1d3823]"
+            : isWarmup
+            ? "bg-[#0c0a06] border-[#291e10] hover:border-[#3d2a12]"
             : "bg-[#0a0a0a] border-[#1f1f1f] hover:border-[#2a2a2a]"
         }`}
       >
@@ -64,15 +128,33 @@ export function SetRow({ setLog, setIndex, onUpdate, onDelete }: SetRowProps) {
             <span
               className={`w-6 h-6 rounded-md flex items-center justify-center text-[11px] font-mono font-bold ${
                 setLog.completed
-                  ? "bg-emerald-500 text-black"
+                  ? isWarmup
+                    ? "bg-amber-500 text-black"
+                    : "bg-emerald-500 text-black"
+                  : isWarmup
+                  ? "bg-[#211709] border border-[#3d2a10] text-amber-400"
                   : "bg-[#161616] border border-[#2a2a2a] text-[#888888]"
               }`}
             >
-              {setIndex + 1}
+              {isWarmup ? "W" : workingSetNumber || setIndex + 1}
             </span>
-            <span className="text-[11px] font-mono uppercase tracking-wider text-[#888888]">
-              Set {setIndex + 1}
-            </span>
+            <div className="flex items-center gap-1.5">
+              <span
+                className={`text-[11px] font-mono uppercase tracking-wider font-semibold ${
+                  isWarmup ? "text-amber-400" : "text-[#888888]"
+                }`}
+              >
+                {isWarmup
+                  ? `Warmup Set ${setIndex + 1}`
+                  : `Working Set ${workingSetNumber || setIndex + 1}`}
+              </span>
+              {isWarmup && (
+                <span className="inline-flex items-center gap-0.5 text-[9px] font-mono px-1.5 py-0.2 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                  <Flame className="h-2.5 w-2.5" />
+                  Prep
+                </span>
+              )}
+            </div>
           </div>
 
           {/* Delete Set */}
@@ -194,6 +276,21 @@ export function SetRow({ setLog, setIndex, onUpdate, onDelete }: SetRowProps) {
                     {setLog.videoFileName || "View Video"}
                   </span>
                 </button>
+
+                {/* Compression status pill */}
+                {isCompressing && compressProgress !== null && (
+                  <span className="inline-flex items-center gap-1 text-[10px] font-mono text-amber-400 bg-amber-500/10 px-1.5 py-0.2 rounded">
+                    <Loader2 className="h-2.5 w-2.5 animate-spin" />
+                    {compressProgress}%
+                  </span>
+                )}
+
+                {setLog.compressionRatio !== undefined && setLog.compressionRatio > 0 && !isCompressing && (
+                  <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-1 rounded">
+                    -{setLog.compressionRatio}%
+                  </span>
+                )}
+
                 <button
                   type="button"
                   onClick={removeVideo}
@@ -221,7 +318,9 @@ export function SetRow({ setLog, setIndex, onUpdate, onDelete }: SetRowProps) {
             onClick={() => onUpdate({ ...setLog, completed: !setLog.completed })}
             className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold cursor-pointer transition-all ${
               setLog.completed
-                ? "bg-emerald-500 hover:bg-emerald-400 text-black shadow-sm"
+                ? isWarmup
+                  ? "bg-amber-500 hover:bg-amber-400 text-black shadow-sm"
+                  : "bg-emerald-500 hover:bg-emerald-400 text-black shadow-sm"
                 : "bg-[#111111] hover:bg-[#1a1a1a] text-[#888888] hover:text-white border border-[#2a2a2a]"
             }`}
           >
@@ -236,9 +335,16 @@ export function SetRow({ setLog, setIndex, onUpdate, onDelete }: SetRowProps) {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm">
           <div className="bg-[#0a0a0a] border border-[#222222] rounded-2xl p-4 w-full max-w-md shadow-2xl relative">
             <div className="flex items-center justify-between pb-3 mb-2 border-b border-[#222222]">
-              <span className="text-xs font-mono uppercase tracking-wider text-[#888888]">
-                Set {setIndex + 1} Recording Review
-              </span>
+              <div>
+                <span className="text-xs font-mono uppercase tracking-wider text-white font-semibold">
+                  {isWarmup ? `Warmup Set ${setIndex + 1}` : `Working Set ${workingSetNumber || setIndex + 1}`} Recording
+                </span>
+                {setLog.compressionRatio !== undefined && setLog.compressionRatio > 0 && (
+                  <p className="text-[10px] font-mono text-emerald-400 mt-0.5">
+                    Compressed: {setLog.compressionRatio}% size reduction
+                  </p>
+                )}
+              </div>
               <button
                 onClick={() => setShowVideoModal(false)}
                 className="p-1 text-[#888888] hover:text-white rounded-lg"
