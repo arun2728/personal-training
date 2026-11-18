@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { ExerciseTemplate, ExerciseLog, SetLog } from "@/types/workout";
+import { ExerciseTemplate, ExerciseLog, SetLog, CoachFeedback } from "@/types/workout";
 import { SetRow } from "./SetRow";
-import { ChevronDown, ChevronUp, Plus, Info, CheckCircle2 } from "lucide-react";
+import { CoachFeedbackSection } from "./CoachFeedbackSection";
+import { ChevronDown, ChevronUp, Plus, Info, CheckCircle2, MessageSquare } from "lucide-react";
 
 interface ExerciseCardProps {
   template: ExerciseTemplate;
@@ -45,6 +46,13 @@ export function ExerciseCard({
     onUpdateExerciseLog({ ...exerciseLog, sets: [...exerciseLog.sets, newSet] });
   };
 
+  const handleSaveFeedback = (feedback: CoachFeedback | undefined) => {
+    onUpdateExerciseLog({
+      ...exerciseLog,
+      coachFeedback: feedback,
+    });
+  };
+
   return (
     <div
       className={`rounded-2xl border transition-all duration-150 overflow-hidden ${
@@ -59,14 +67,22 @@ export function ExerciseCard({
         className="p-4 flex items-center justify-between cursor-pointer select-none"
       >
         <div className="flex-1 pr-3">
-          <div className="flex items-center gap-2 mb-1.5">
+          <div className="flex items-center gap-2 mb-1.5 flex-wrap">
             <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#141414] text-[#888888] border border-[#262626]">
               {template.category}
             </span>
+
             {isAllCompleted && (
               <span className="inline-flex items-center gap-1 text-[11px] font-mono text-emerald-400">
                 <CheckCircle2 className="h-3 w-3" />
                 Done
+              </span>
+            )}
+
+            {exerciseLog.coachFeedback?.comment && (
+              <span className="inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#0d1710] text-emerald-400 border border-[#1b3823]">
+                <MessageSquare className="h-2.5 w-2.5" />
+                Coach Review
               </span>
             )}
           </div>
@@ -113,10 +129,10 @@ export function ExerciseCard({
         </div>
       </div>
 
-      {/* Expanded Content: Form Cues & Set Rows */}
+      {/* Expanded Content: Form Cues, Set Rows, Coach Feedback */}
       {isExpanded && (
         <div className="px-4 pb-4 pt-1 space-y-3 border-t border-[#1a1a1a]">
-          {/* Coach Notes / Form Cues */}
+          {/* Coach Form Cues */}
           {template.notes && (
             <div className="p-3 rounded-xl bg-[#0f0f0f] border border-[#222222] text-xs text-[#a1a1aa] flex items-start gap-2">
               <Info className="h-3.5 w-3.5 shrink-0 text-white mt-0.5" />
@@ -149,6 +165,13 @@ export function ExerciseCard({
             <Plus className="h-3 w-3" />
             <span>Add Extra Set</span>
           </button>
+
+          {/* Coach Aanchal's Exercise Feedback Section */}
+          <CoachFeedbackSection
+            exerciseName={template.name}
+            feedback={exerciseLog.coachFeedback}
+            onSaveFeedback={handleSaveFeedback}
+          />
         </div>
       )}
     </div>

@@ -44,6 +44,7 @@ export async function POST(request: Request) {
                 s.reps,
                 s.weightKg * s.reps,
                 s.videoFileName || s.videoUrl || "No Video",
+                ex.coachFeedback?.comment || "",
                 new Date().toISOString(),
               ]);
             }

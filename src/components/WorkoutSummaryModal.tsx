@@ -36,8 +36,12 @@ export function WorkoutSummaryModal({
   let totalVolumeKg = 0;
   let totalSetsCompleted = 0;
   let totalVideos = 0;
+  let totalFeedbacks = 0;
 
   session.exercises.forEach((ex) => {
+    if (ex.coachFeedback?.comment) {
+      totalFeedbacks += 1;
+    }
     ex.sets.forEach((set) => {
       if (set.completed) {
         totalSetsCompleted += 1;
@@ -63,24 +67,31 @@ export function WorkoutSummaryModal({
         const videoTag = s.videoFileName ? ` [📹 Video Attached]` : "";
         text += `   • Set ${s.setNumber}: ${s.weightKg} kg × ${s.reps} reps${videoTag}\n`;
       });
+
+      if (ex.coachFeedback?.comment) {
+        const tag = ex.coachFeedback.status ? `[${ex.coachFeedback.status.toUpperCase()}] ` : "";
+        text += `   💬 *Aanchal's Review*: ${tag}"${ex.coachFeedback.comment}"\n`;
+      }
       text += `\n`;
     });
 
     text += `🔥 Total Volume: ${totalVolumeKg.toLocaleString()} kg\n`;
     text += `✅ Completed Sets: ${totalSetsCompleted}\n`;
     if (totalVideos > 0) text += `📹 Videos: ${totalVideos} set recordings ready for review\n`;
+    if (totalFeedbacks > 0) text += `💬 Coach Reviews: ${totalFeedbacks} exercises reviewed\n`;
 
     return text;
   };
 
   const generateSheetTsv = () => {
-    let tsv = "Date\tWorkout Day\tExercise\tSet\tWeight (kg)\tReps\tVolume (kg)\tVideo Status\n";
+    let tsv = "Date\tWorkout Day\tExercise\tSet\tWeight (kg)\tReps\tVolume (kg)\tVideo Status\tCoach Feedback\n";
     session.exercises.forEach((ex) => {
       ex.sets.forEach((s) => {
         if (s.completed) {
           const volume = s.weightKg * s.reps;
           const video = s.videoFileName ? `Attached (${s.videoFileName})` : "None";
-          tsv += `${session.date}\t${session.dayTitle}\t${ex.exerciseName}\tSet ${s.setNumber}\t${s.weightKg}\t${s.reps}\t${volume}\t${video}\n`;
+          const feedback = ex.coachFeedback?.comment || "";
+          tsv += `${session.date}\t${session.dayTitle}\t${ex.exerciseName}\tSet ${s.setNumber}\t${s.weightKg}\t${s.reps}\t${volume}\t${video}\t${feedback}\n`;
         }
       });
     });
@@ -171,36 +182,48 @@ export function WorkoutSummaryModal({
         </div>
 
         {/* High-Level Stats */}
-        <div className="grid grid-cols-3 gap-2 mb-5">
-          <div className="bg-black border border-[#222222] rounded-xl p-3 text-center">
+        <div className={`grid ${totalFeedbacks > 0 ? "grid-cols-4" : "grid-cols-3"} gap-2 mb-5`}>
+          <div className="bg-black border border-[#222222] rounded-xl p-2.5 text-center">
             <div className="text-[10px] uppercase font-mono tracking-wider text-[#666666]">
               Volume
             </div>
-            <div className="text-base font-bold font-mono text-white mt-1">
+            <div className="text-sm sm:text-base font-bold font-mono text-white mt-1">
               {totalVolumeKg.toLocaleString()}
             </div>
             <div className="text-[9px] text-[#666666] font-mono">kg total</div>
           </div>
 
-          <div className="bg-black border border-[#222222] rounded-xl p-3 text-center">
+          <div className="bg-black border border-[#222222] rounded-xl p-2.5 text-center">
             <div className="text-[10px] uppercase font-mono tracking-wider text-[#666666]">
               Sets Done
             </div>
-            <div className="text-base font-bold font-mono text-emerald-400 mt-1">
+            <div className="text-sm sm:text-base font-bold font-mono text-emerald-400 mt-1">
               {totalSetsCompleted}
             </div>
             <div className="text-[9px] text-[#666666] font-mono">completed</div>
           </div>
 
-          <div className="bg-black border border-[#222222] rounded-xl p-3 text-center">
+          <div className="bg-black border border-[#222222] rounded-xl p-2.5 text-center">
             <div className="text-[10px] uppercase font-mono tracking-wider text-[#666666]">
               Videos
             </div>
-            <div className="text-base font-bold font-mono text-white mt-1">
+            <div className="text-sm sm:text-base font-bold font-mono text-white mt-1">
               {totalVideos}
             </div>
             <div className="text-[9px] text-[#666666] font-mono">clips ready</div>
           </div>
+
+          {totalFeedbacks > 0 && (
+            <div className="bg-black border border-[#1b3823] rounded-xl p-2.5 text-center">
+              <div className="text-[10px] uppercase font-mono tracking-wider text-emerald-400">
+                Reviews
+              </div>
+              <div className="text-sm sm:text-base font-bold font-mono text-emerald-400 mt-1">
+                {totalFeedbacks}
+              </div>
+              <div className="text-[9px] text-emerald-500/70 font-mono">logged</div>
+            </div>
+          )}
         </div>
 
         {/* Direct Google Sheets Sync */}

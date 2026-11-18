@@ -1,3 +1,16 @@
+export type FeedbackStatus =
+  | "approved"
+  | "needs-adjustment"
+  | "increase-weight"
+  | "decrease-weight"
+  | "pending";
+
+export interface CoachFeedback {
+  comment: string;
+  status?: FeedbackStatus;
+  updatedAt?: string;
+}
+
 export interface ExerciseTemplate {
   id: string;
   name: string;
@@ -32,6 +45,7 @@ export interface ExerciseLog {
   exerciseId: string;
   exerciseName: string;
   sets: SetLog[];
+  coachFeedback?: CoachFeedback; // Overall feedback from Aanchal covering all sets
 }
 
 export interface WorkoutSession {
